@@ -1,10 +1,11 @@
-from flask import jsonify
+import flask
 
 
 def age_to_words(seconds):
     multipliers = [1, 60, 60, 24, 7, 52]
     words = ['seconds', 'minutes', 'hours', 'days', 'weeks', 'years']
     current = 1
+
     for multiplier, word in zip(multipliers, words):
         current *= multiplier
         value = seconds / current
@@ -20,6 +21,6 @@ def age_to_words(seconds):
 def bad_request(message):
     # custom response type for invalid requests
     # http://stackoverflow.com/a/21297608/
-    response = jsonify({'message': message})
+    response = flask.jsonify({'message': message})
     response.status_code = 400
     return response

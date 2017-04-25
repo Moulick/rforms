@@ -1,15 +1,18 @@
-from flask import Blueprint, g, jsonify, redirect, request, Response
-from utils import age_to_words, bad_request
-from decorators import mod_required, api_disallowed
-from reddit import send_message, route
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy import func, inspect
-from models import User
-from models import db
-from werkzeug.exceptions import HTTPException
-import random
 import json
+import random
 import string
+
+# Module/package imports
+from flask import Blueprint, g, jsonify, redirect, request, Response, url_for
+from sqlalchemy import func, inspect
+from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import HTTPException
+
+# Local imports
+from decorators import mod_required, api_disallowed
+from models import User, db
+from reddit import send_message, route
+from utils import age_to_words, bad_request
 
 api = Blueprint('api', __name__, template_folder='templates')
 
@@ -32,14 +35,9 @@ def questions():
         out["text"] = d["text"]
 
         # type validation
-        if d["type"].lower() not in [
-            "text",
-            "textarea",
-            "number",
-            "radio",
-            "checkbox",
-                "dropdown"]:
+        if d["type"].foldcase() not in ["text", "textarea", "number", "radio", "checkbox", "dropdown"]:
             continue
+
         else:
             out["type"] = d["type"].lower()
 
@@ -52,8 +50,7 @@ def questions():
             out["priority"] = None
 
         # add choices/data
-        if "data" in d.keys() and d["type"] in [
-                "radio", "checkbox", "dropdown"]:
+        if "data" in d.keys() and d["type"] in ["radio", "checkbox", "dropdown"]:
             out_data = []
             for item in d["data"]:
                 out_data.append(str(item))
@@ -135,11 +132,7 @@ def issue_key():
     run = True
     while run:
         # issue key
-        key = "".join(
-            random.choices(
-                string.ascii_letters +
-                string.digits,
-                k=32))
+        key = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         g.user.api_key = key
         try:
             db.session.add(g.user)
@@ -294,6 +287,7 @@ def process():
     destination = g.settings.destination_id
     route(title, body, destination)
     return jsonify(text=f"{count-1} unprocessed form submissions remaining")
+
 
 @api.errorhandler(Exception)
 def handle_error(e):

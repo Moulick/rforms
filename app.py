@@ -477,6 +477,7 @@ def docs(location):
     url = f"https://github.com/Jakeable/rforms/wiki/{location}"
     return redirect(url)
 
+
 @app.errorhandler(Exception)
 def handle_error(e):
     # generates an error page for all errors

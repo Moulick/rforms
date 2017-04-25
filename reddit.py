@@ -16,10 +16,10 @@ def verify_identity(code):
               "code": code,
               "redirect_uri": os.environ.get('REDDIT_FRONTEND_REDIRECT_URI')}
     result = requests.post(
-    "https://www.reddit.com/api/v1/access_token",
-    headers=headers,
-    auth=auth,
-     params=params)
+        "https://www.reddit.com/api/v1/access_token",
+        headers=headers,
+        auth=auth,
+        params=params)
 
     auth_dict = result.json()
     if 'error' in auth_dict:
@@ -127,7 +127,7 @@ def user_info(username):
 
     combined = int(me_dict['comment_karma']) + int(me_dict['link_karma'])
     try:
-        me_dict =  out.json()['data']
+        me_dict = out.json()['data']
         reg_dict_out = {'name': me_dict['name'],
                         'created': me_dict['created'],
                         'link_karma': me_dict['link_karma'],
@@ -139,12 +139,13 @@ def user_info(username):
         return reg_dict_out
     except:
         try:
-            me_dict =  out.json()['data']
+            me_dict = out.json()['data']
             susp_dict_out = {'name': me_dict['name'],
                              'is_suspended': me_dict['is_suspended']}
             return susp_dict_out
         except:
             return out.json()
+
 
 def send_message(user, subject, message):
     user_agent = os.environ.get("REDDIT_USER_AGENT")
@@ -162,8 +163,7 @@ def send_message(user, subject, message):
 
 
 def route(title, body, destination):
-    if destination.startswith('t1_') or destination.startswith(
-        't3_') or destination.startswith('t4_'):
+    if destination.startswith('t1_') or destination.startswith('t3_') or destination.startswith('t4_'):
         return post_comment(destination, body)
     elif 'r/' in destination:
         exp = re.compile(r"\/?r\/(.+)")

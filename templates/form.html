@@ -57,8 +57,8 @@
             <label for="{{radio[0]}}">
               <input type="radio" name="{{question.id}}" id="{{radio[0]}}" value="{{radio[0]}}" {% if preview %}disabled{% elif question.validators is defined and question.validators.required is defined and question.validators.required == true %}required{% endif %}>
               {{radio[1]}}
-              </div>
             </label>
+          </div>
           {% endfor %}
         {% elif question["type"] == "checkbox" %}
         {# Checkboxes #}
@@ -89,7 +89,6 @@
                 <li>{{ word }}</li>
             {% endfor %}
             </ul>
-        </p>
         </div>{# end validators #}
         {% endif %}
         </div>
