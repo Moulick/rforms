@@ -149,6 +149,10 @@ def update_setting():
     # generic method to update settings
     setting_name = request.form["setting"]
     data = request.form["data"]
+    if data == "true":
+        data = True
+    elif data == "false":
+        data = False
     if setting_name.lower() not in g.settings.__dict__.keys():
         return bad_request(f"setting field {setting_name} does not exist")
     if setting_name == 'min_age' and data is not None:
@@ -286,6 +290,9 @@ def process():
     title = user.response_title
     destination = g.settings.destination_id
     route(title, body, destination)
+    user.processed = True
+    db.session.add(user)
+    db.session.commit()
     return jsonify(text=f"{count-1} unprocessed form submissions remaining")
 
 
